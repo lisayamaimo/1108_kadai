@@ -7,15 +7,21 @@
   <script src="js/jquery-2.1.3.min.js"></script>
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/style.css">
+  
 </head>
 
 <body>
-  <h1>Memo Pad</h1>
+  <h1>Lisa's sake memo</h1>
 
   <main>
     <div class="input-area">
-      <input id="title" type="text" placeholder="タイトルを入力">
-      <textarea id="text" placeholder="本文を入力"></textarea>
+      <li>
+        <input id="sakename" type="text" placeholder="商品名">
+        <textarea id="sakagura" placeholder="酒造名"></textarea>
+        <textarea id="prefecture" placeholder="都道府県"></textarea>
+        <textarea id="review" placeholder="感想"></textarea>
+        <input type="file" id="image" accept="image/*" />
+      </li>
     </div>
 
     <div class="button-area">
@@ -28,25 +34,62 @@
     <!-- ここに追加データが挿入される -->
   </ul>
   <footer>
-    Gs
+    Sakenomi-Lisa🍶
   </footer>
   <!-- 以下にjsを書いていきます -->
   <script>
 
-    //1.Save クリックイベント
-    $("#save").on("click", function () {
-      const key = $("#title").val();
-      const value = $("#text").val();
+// Save クリックイベント
+$("#save").on("click", function () {
+  const sakename = $("#sakename").val();
+  const sakagura = $("#sakagura").val();
+  const prefecture = $("#prefecture").val();
+  const review = $("#review").val();
 
-      localStorage.setItem(key, value);
-      const html = `
-      <li>
-        <p>${key}</p>
-        <p>${value}</p>
-      </li>
-    `;
-      $("#list").append(html);
-    });
+  // 画像ファイルを取得
+  const imageFile = $("#image")[0].files[0];
+
+  // 画像ファイルを保存
+  if (imageFile) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const imageData = e.target.result;
+      localStorage.setItem(sakename, sakagura, prefecture, review, image);
+    };
+    reader.readAsDataURL(imageFile);
+  } else {
+    localStorage.setItem(sakename, sakagura, prefecture, review);
+  }
+  const html = `
+    <li>
+      <p>${sakename}</p>
+      <p>${sakagura}</p>
+      <p>${prefecture}</p>
+      <p>${review}</p>
+      <img src="${image}" alt="Image" /> <!-- 画像を表示 -->
+    </li>
+  `;
+  $("#list").append(html);
+});
+
+
+    // //1.Save クリックイベント
+    // $("#save").on("click", function () {　// saveボタンがクリックされたのを監視👀
+    //   const sakename = $("#sakename").val();　//idに対して定数を決めてあげるよ
+    //   const sakagura = $("#sakagura").val();　//idに対して定数を決めてあげるよ
+    //   const prefecture = $("#prefecture").val();　//idに対して定数を決めてあげるよ
+    //   const review = $("#review").val();　//idに対して定数を決めてあげるよ
+    //   localStorage.setItem(sakename, sakagura, review, image);　//
+    //   const html = `
+    //   <li>
+    //     <p>${sakename}</p>
+    //     <p>${sakagura}</p>
+    //     <p>${prefecture}</p>
+    //     <p>${review}</p>
+    //   </li>
+    // `;
+    //   $("#list").append(html);
+    // });
 
 
 
@@ -63,8 +106,11 @@
       const value = localStorage.getItem(key);
       const html = `
       <li>
-        <p>${key}</p>
-        <p>${value}</p>
+        <p>${sakename}</p>
+        <p>${sakagura}</p>
+        <p>${prefecture}</p>
+        <p>${review}</p>
+        <img src="${image}" alt="Image"/>
       </li>
     `;
       $("#list").append(html);
